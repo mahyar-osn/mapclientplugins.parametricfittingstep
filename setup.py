@@ -20,7 +20,8 @@ readme = readfile("README.rst", split=True)[3:]  # skip title
 # For requirements not hosted on PyPi place listings
 # into the 'requirements.txt' file.
 requires = ['get-image-size',
-            'numpy']  # minimal requirements listing
+            'numpy',
+]  # minimal requirements listing
 source_license = readfile("LICENSE")
 
 

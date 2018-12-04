@@ -183,6 +183,18 @@ class MasterModel(QtCore.QObject):
 
     def done(self):
         self._save_settings()
+        self._fiducial_markers_model.clear()
+
+    def set_frame_index(self, frame_index):
+        self._current_time = self._get_time_for_frame_index(frame_index)
+        self._timekeeper.setTime(self._current_time)
+
+    def _get_time_for_frame_index(self, index):
+        frame_count = self._frame_count
+        duration = frame_count / self._frames_per_second
+        frame_separation = 1 / frame_count
+        initial_offset = frame_separation / 2
+        return ((index - 1) * frame_separation + initial_offset) * duration
 
     def _get_settings(self):
         settings = self._settings
@@ -215,11 +227,8 @@ class MasterModel(QtCore.QObject):
     def get_scaffold_description(self):
         region_description = self._scaffold_model.write()
         scene_description = self._scaffold_scene.write()
-        end_time = self._timekeeper.getMaximumTime()
-        epochs = [1.0] * self._frame_count
-        epochs[0] = 0.0
-        epochs[-1] = end_time
-        scaffold_description = ScaffoldDescription(region_description, scene_description, epochs)
+        scaffold_description = ScaffoldDescription(region_description, scene_description, self._time_sequence)
+
         return scaffold_description
 
 

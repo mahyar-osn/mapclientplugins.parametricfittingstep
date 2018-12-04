@@ -1,3 +1,4 @@
+from __future__ import division
 
 import numpy as np
 from scipy.optimize import minimize
@@ -50,8 +51,8 @@ class ParametricFittingWidget(QtGui.QWidget):
         Callback for when SceneviewerWidget is initialised
         Set custom scene from model
         """
-        sceneviewer = self._ui.sceneviewer_widget.get_zinc_sceneviewer()
-        if sceneviewer is not None:
+        scene_viewer = self._ui.sceneviewer_widget.get_zinc_sceneviewer()
+        if scene_viewer is not None:
             self._model.load_settings()
             scene = self._model.get_scene()
             self._ui.sceneviewer_widget.set_scene(scene)
@@ -78,9 +79,12 @@ class ParametricFittingWidget(QtGui.QWidget):
         frame_count = self._model.get_frame_count()
         frames_per_second = self._model.get_frames_per_second()
         duration = frame_count / frames_per_second
+        self._model.set_frame_index(1)
         self._model.set_maximum_time_value(duration)
         self._ui.timeValue_doubleSpinBox.setMaximum(duration)
-        self._ui.timeValue_doubleSpinBox.setSingleStep(1 / frames_per_second)
+        frame_separation = 1 / frame_count
+        self._ui.timeValue_doubleSpinBox.setSingleStep(frame_separation)
+        self._ui.timeValue_doubleSpinBox.setValue(frame_separation / 2)
         self._ui.timeLoop_checkBox.setChecked(self._model.is_time_loop())
 
     def get_model(self):

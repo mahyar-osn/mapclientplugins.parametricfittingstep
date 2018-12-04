@@ -31,6 +31,12 @@ class FiducialMarkers(Base):
         self._region = default_region.createChild('fiducial')
         self._coordinate_field = create_finite_element_field(self._region)
 
+    def clear(self):
+        self._fiducial_marker_data = None
+        if self._region is not None:
+            parent_region = self._region.getParent()
+            parent_region.removeChild(self._region)
+
     def set_data(self, data):
         self._fiducial_marker_data = data
 
@@ -89,10 +95,14 @@ class FiducialMarkers(Base):
 
     def calculate_extents(self):
         index = 0
-        min_x = math.inf
-        max_x = -math.inf
-        min_y = math.inf
-        max_y = -math.inf
+        try:
+            infinity = math.inf
+        except AttributeError:
+            infinity = float('inf')
+        min_x = infinity
+        max_x = -infinity
+        min_y = infinity
+        max_y = -infinity
         for key in self._fiducial_marker_data:
             point_location = self._fiducial_marker_data[key][index]
             if point_location[0] < min_x:
