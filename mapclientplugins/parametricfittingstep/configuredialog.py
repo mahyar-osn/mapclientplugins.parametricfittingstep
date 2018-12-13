@@ -1,4 +1,5 @@
 
+import os
 
 from PySideX import QtWidgets
 from mapclientplugins.parametricfittingstep.ui_configuredialog import Ui_ConfigureDialog
@@ -7,13 +8,13 @@ INVALID_STYLE_SHEET = 'background-color: rgba(239, 0, 0, 50)'
 DEFAULT_STYLE_SHEET = ''
 
 
-class ConfigureDialog(QtGui.QDialog):
+class ConfigureDialog(QtWidgets.QDialog):
     """
     Configure dialog to present the user with the options to configure this step.
     """
 
     def __init__(self, parent=None):
-        QtGui.QDialog.__init__(self, parent)
+        QtWidgets.QDialog.__init__(self, parent)
 
         self._ui = Ui_ConfigureDialog()
         self._ui.setupUi(self)
@@ -78,7 +79,6 @@ class ConfigureDialog(QtGui.QDialog):
         if location:
             self._previous_location = location
             self._ui.preparedData_lineEdit.setText(os.path.relpath(location, self._workflow_location))
-            self.validate()
 
     def getConfig(self):
         """
