@@ -48,6 +48,8 @@ class ParametricFittingWidget(QtGui.QWidget):
         self._applied_width_scale = 1
         self._applied_height_scale = 1
 
+        self._prepared_data_location = ''
+
     def _graphics_initialized(self):
         """
         Callback for when SceneviewerWidget is initialised
@@ -96,10 +98,13 @@ class ParametricFittingWidget(QtGui.QWidget):
     def register_done_execution(self, done_callback):
         self._done_callback = done_callback
 
+    def set_prepared_data_location(self, location):
+        self._prepared_data_location = location
+
     def _load_pre_recorded_data(self):
         scaffold_model = self._model.get_scaffold_model()
         scaffold_model.initialise_region()
-        with open(r'C:\Users\sparc\demo\data\heart\video\mesh_description_long.json') as f:
+        with open(self._prepared_data_location) as f:
             content = f.read()
             mesh_description = json.loads(content)
 

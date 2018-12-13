@@ -2,6 +2,7 @@
 """
 MAP Client Plugin Step
 """
+import os
 import json
 
 from PySide import QtGui
@@ -84,7 +85,7 @@ class ParametricFittingStep(WorkflowStepMountPoint):
         self._time_labelled_nodal_locations = None
         self._scaffold_name = '3D Heart 1'
         # Config:
-        self._config = {'identifier': '', 'AutoDone': False}
+        self._config = {'identifier': ''}
         self._model = None
         self._view = None
 
@@ -103,6 +104,7 @@ class ParametricFittingStep(WorkflowStepMountPoint):
                                   self._image_context_data, self._time_labelled_nodal_locations,
                                   active_mesh)
         self._view = ParametricFittingWidget(self._model)
+        self._view.set_prepared_data_location(os.path.join(self._location, self._config['location']))
         # self._view.setWindowFlags(QtCore.Qt.Widget)
         self._view.register_done_execution(self._myDoneExecution)
         self._setCurrentWidget(self._view)
@@ -129,9 +131,6 @@ class ParametricFittingStep(WorkflowStepMountPoint):
             self._image_context_data = data
         elif index == 2:
             self._time_labelled_nodal_locations = data
-        elif index == 3:
-            print('index is three@@@@@@'
-            )
 
     def configure(self):
         """
@@ -143,6 +142,7 @@ class ParametricFittingStep(WorkflowStepMountPoint):
         """
         dlg = ConfigureDialog(QtGui.QApplication.activeWindow().currentWidget())
         dlg.identifierOccursCount = self._identifierOccursCount
+        dlg.set_workflow_location(self._location)
         dlg.setConfig(self._config)
         dlg.validate()
         dlg.setModal(True)
@@ -183,6 +183,7 @@ class ParametricFittingStep(WorkflowStepMountPoint):
 
         d = ConfigureDialog()
         d.identifierOccursCount = self._identifierOccursCount
+        d.set_workflow_location(self._location)
         d.setConfig(self._config)
         self._configured = d.validate()
 
