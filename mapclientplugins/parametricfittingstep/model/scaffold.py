@@ -10,7 +10,7 @@ from mapclientplugins.parametricfittingstep.model.base import Base
 
 
 DISPLAY_SURFACES_TRANSLUCENT_KEY = 'display_surface'
-FIT_OPTIONS = ['LV outer height', 'Base height', 'LV outer radius', 'RV width']
+FIT_OPTIONS = ['LV outer height', 'Base height', 'LV outer diameter', 'RV width', 'RV inner height fraction']
 
 
 class Scaffold(Base):
@@ -34,11 +34,14 @@ class Scaffold(Base):
         context = self._master_model.get_context()
         self._parent_region = context.getDefaultRegion()
 
-    def _initialise_region(self):
-        if self._region:
-            self._parent_region.removeChild(self._region)
+    def initialise_region(self):
+        self.clear()
         self._region = self._parent_region.createChild(self._region_name)
         self._coordinate_field = create_finite_element_field(self._region)
+
+    def clear(self):
+        if self._region:
+            self._parent_region.removeChild(self._region)
 
     def set_scaffold(self, scaffold):
         self._scaffold = scaffold
@@ -137,9 +140,8 @@ class Scaffold(Base):
         return self._scaffold_fit_parameters
 
     def scale(self, options, width, height):
-        _scale_width(options, width * 0.8)
-        _scale_height(options, height * 0.8)
-        self.generate_mesh(options)
+        options['Unit scale'] = 0.8 * (height + width) / 2
+        self._generate_mesh(options)
 
     def _undefine_scaffold_nodes(self):
         field_module = self._region.getFieldmodule()
@@ -177,8 +179,8 @@ class Scaffold(Base):
         self._temp_region = self._parent_region.createRegion()
         self._scaffold.generateMesh(self._temp_region, temp_options)
 
-    def generate_mesh(self, options):
-        self._initialise_region()
+    def _generate_mesh(self, options):
+        self.initialise_region()
         field_module = self._region.getFieldmodule()
         field_module.beginChange()
         self._scaffold.generateMesh(self._region, options)

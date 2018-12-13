@@ -79,10 +79,10 @@ class ParametricFittingStep(WorkflowStepMountPoint):
                       'http://physiomeproject.org/workflow/1.0/rdf-schema#uses',
                       'http://physiomeproject.org/workflow/1.0/rdf-schema#scaffold_description'))
         # Port data:
-        self._portData0 = None # http://physiomeproject.org/workflow/1.0/rdf-schema#file_location
+        self._portData0 = None  # http://physiomeproject.org/workflow/1.0/rdf-schema#file_location
         self._image_context_data = None
         self._time_labelled_nodal_locations = None
-        self._scaffold_description = '3D Heart Ventricles with Base 2'
+        self._scaffold_name = '3D Heart 1'
         # Config:
         self._config = {'identifier': '', 'AutoDone': False}
         self._model = None
@@ -96,7 +96,7 @@ class ParametricFittingStep(WorkflowStepMountPoint):
         sc = Scaffolds()
         active_mesh = None
         for mesh_type in sc.getMeshTypes():
-            if mesh_type.getName() == '3D Heart Ventricles with Base 2':
+            if mesh_type.getName() == self._scaffold_name:
                 active_mesh = mesh_type
 
         self._model = MasterModel(self._location, self._config['identifier'],

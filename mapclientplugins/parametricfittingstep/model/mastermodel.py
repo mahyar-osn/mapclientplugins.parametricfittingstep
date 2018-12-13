@@ -184,6 +184,7 @@ class MasterModel(QtCore.QObject):
     def done(self):
         self._save_settings()
         self._fiducial_markers_model.clear()
+        self._scaffold_model.clear()
 
     def set_frame_index(self, frame_index):
         self._current_time = self._get_time_for_frame_index(frame_index)

@@ -1,6 +1,8 @@
 from __future__ import division
 
+import json
 import numpy as np
+from opencmiss.zinc.streamregion import StreaminformationRegion
 from scipy.optimize import minimize
 
 from PySide import QtGui
@@ -35,10 +37,10 @@ class ParametricFittingWidget(QtGui.QWidget):
         self._setup_handlers()
         self._make_connections()
 
-        self._scaffold_fit_nodes = {'lv_apex': 62, 'rv_apex': 167,
-                                    'lv1': 85, 'lv2': 109,
-                                    'sept1': 91, 'sept2': 103,
-                                    'rv1': 175, 'rv2': 191,
+        self._scaffold_fit_nodes = {'lv_apex': 126, 'rv_apex': 167,
+                                    'lv1': 142, 'lv2': 166,
+                                    'sept1': 35, 'sept2': 59,
+                                    'rv1': 160, 'rv2': 184,
                                     'rb1': 255, 'rb2': 210,
                                     'lb1': 258, 'lb2': 237}
         self._applied_rotation_mx = np.matrix('1 0 0; 0 1 0; 0 0 1')
@@ -70,6 +72,7 @@ class ParametricFittingWidget(QtGui.QWidget):
         self._ui.fittingFitRigidly_pushButton.clicked.connect(self._do_initial_rigid_fit)
         self._ui.fittingFitNonRigidly_pushButton.clicked.connect(self._do_non_linear_fit)
         self._ui.fittingFitEpochs_pushButton.clicked.connect(self._do_epochs_fit)
+        self._ui.cheat_pushButton.clicked.connect(self._load_pre_recorded_data)
 
     def _setup_handlers(self):
         basic_handler = SceneManipulation()
@@ -92,6 +95,20 @@ class ParametricFittingWidget(QtGui.QWidget):
 
     def register_done_execution(self, done_callback):
         self._done_callback = done_callback
+
+    def _load_pre_recorded_data(self):
+        scaffold_model = self._model.get_scaffold_model()
+        scaffold_model.initialise_region()
+        with open(r'C:\Users\sparc\demo\data\heart\video\mesh_description_long.json') as f:
+            content = f.read()
+            mesh_description = json.loads(content)
+
+        region = scaffold_model.get_region()
+        region_description = mesh_description['_region_description']
+        _read_region_description(region, region_description)
+        field_module = region.getFieldmodule()
+        field_module.defineAllFaces()
+        self._model.recreate_scaffold_graphics()
 
     def _update_ui(self):
         pass
@@ -460,3 +477,23 @@ def rigid_transform_3d(A, B):
     t = -R * centroid_a + centroid_b
 
     return R, t
+
+
+def _read_region_description(region, region_description):
+    stream_information = region.createStreaminformationRegion()
+    memory_resource = stream_information.createStreamresourceMemoryBuffer(
+        region_description['elements'].encode('utf-8'))
+    stream_information.setResourceDomainTypes(memory_resource, Field.DOMAIN_TYPE_MESH3D)
+
+    for key in region_description:
+        if key != 'elements':
+            if isinstance(key, float):
+                time = key
+            else:
+                time = float(key)
+            memory_resource = stream_information.createStreamresourceMemoryBuffer(
+                region_description[key].encode('utf-8'))
+            stream_information.setResourceDomainTypes(memory_resource, Field.DOMAIN_TYPE_NODES)
+            stream_information.setResourceAttributeReal(memory_resource, StreaminformationRegion.ATTRIBUTE_TIME,
+                                                        time)
+    region.read(stream_information)

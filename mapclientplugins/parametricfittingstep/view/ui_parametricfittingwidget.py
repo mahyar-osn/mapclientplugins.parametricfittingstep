@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'mapclientplugins\parametricfittingstep\qt\parametricfittingwidget.ui'
+# Form implementation generated from reading ui file 'qt\parametricfittingwidget.ui'
 #
-# Created: Wed Oct 24 13:52:50 2018
+# Created: Fri Dec  7 02:44:24 2018
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -20,6 +20,14 @@ class Ui_ParametricFittingWidget(object):
         ParametricFittingWidget.setSizePolicy(sizePolicy)
         self.gridLayout = QtGui.QGridLayout(ParametricFittingWidget)
         self.gridLayout.setObjectName("gridLayout")
+        self.sceneviewer_widget = BaseSceneviewerWidget(ParametricFittingWidget, shared_open_gl_widget)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(4)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.sceneviewer_widget.sizePolicy().hasHeightForWidth())
+        self.sceneviewer_widget.setSizePolicy(sizePolicy)
+        self.sceneviewer_widget.setObjectName("sceneviewer_widget")
+        self.gridLayout.addWidget(self.sceneviewer_widget, 0, 1, 1, 1)
         self.dockWidget = QtGui.QDockWidget(ParametricFittingWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(1)
@@ -105,6 +113,20 @@ class Ui_ParametricFittingWidget(object):
         self.verticalLayout.addWidget(self.fitting_groupBox)
         spacerItem = QtGui.QSpacerItem(20, 557, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem)
+        self.frame_2 = QtGui.QFrame(self.dockWidgetContents)
+        self.frame_2.setFrameShape(QtGui.QFrame.StyledPanel)
+        self.frame_2.setFrameShadow(QtGui.QFrame.Raised)
+        self.frame_2.setObjectName("frame_2")
+        self.horizontalLayout_6 = QtGui.QHBoxLayout(self.frame_2)
+        self.horizontalLayout_6.setObjectName("horizontalLayout_6")
+        self.cheat_pushButton = QtGui.QPushButton(self.frame_2)
+        self.cheat_pushButton.setText("")
+        self.cheat_pushButton.setFlat(True)
+        self.cheat_pushButton.setObjectName("cheat_pushButton")
+        self.horizontalLayout_6.addWidget(self.cheat_pushButton)
+        spacerItem1 = QtGui.QSpacerItem(104, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_6.addItem(spacerItem1)
+        self.verticalLayout.addWidget(self.frame_2)
         self.frame = QtGui.QFrame(self.dockWidgetContents)
         self.frame.setFrameShape(QtGui.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtGui.QFrame.Raised)
@@ -115,8 +137,8 @@ class Ui_ParametricFittingWidget(object):
         self.viewAll_button = QtGui.QPushButton(self.frame)
         self.viewAll_button.setObjectName("viewAll_button")
         self.horizontalLayout_2.addWidget(self.viewAll_button)
-        spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout_2.addItem(spacerItem1)
+        spacerItem2 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_2.addItem(spacerItem2)
         self.done_button = QtGui.QPushButton(self.frame)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -128,14 +150,6 @@ class Ui_ParametricFittingWidget(object):
         self.verticalLayout.addWidget(self.frame)
         self.dockWidget.setWidget(self.dockWidgetContents)
         self.gridLayout.addWidget(self.dockWidget, 0, 0, 1, 1)
-        self.sceneviewer_widget = BaseSceneviewerWidget(ParametricFittingWidget, shared_open_gl_widget)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(4)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.sceneviewer_widget.sizePolicy().hasHeightForWidth())
-        self.sceneviewer_widget.setSizePolicy(sizePolicy)
-        self.sceneviewer_widget.setObjectName("sceneviewer_widget")
-        self.gridLayout.addWidget(self.sceneviewer_widget, 0, 1, 1, 1)
 
         self.retranslateUi(ParametricFittingWidget)
         QtCore.QMetaObject.connectSlotsByName(ParametricFittingWidget)
